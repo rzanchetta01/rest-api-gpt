@@ -34,13 +34,13 @@ type messageTemplate struct {
 
 type IGpt3dot5Repository interface {
 	DoGpt3dot5AskQuestion(string) (*entity.Gpt3dot5Response, error)
-	SaveMessage(*entity.Gpt3dot5Response, string, string) error
+	Gpt3dot5SaveMessage(*entity.Gpt3dot5Response, string, string) error
 }
 
 func NewGpt3dot5Repository(client *mongo.Client) *gpt3dot5Repository {
 	repository := gpt3dot5Repository{}
 	repository.AuthType = viper.GetString("Ia.Gpt3dot5.AuthType")
-	repository.ApiKey = viper.GetString("Ia.Gpt3dot5.ApiKey")
+	repository.ApiKey = viper.GetString("OpenAi.ApiKey")
 	repository.ContentType = string("application/json")
 	repository.RequestType = string("POST")
 	repository.Url = viper.GetString("Ia.Gpt3dot5.Url")
@@ -96,7 +96,7 @@ func (repo *gpt3dot5Repository) DoGpt3dot5AskQuestion(message string) (*entity.G
 	return &result, nil
 }
 
-func (r *gpt3dot5Repository) SaveMessage(data *entity.Gpt3dot5Response, id string, message string) error {
+func (r *gpt3dot5Repository) Gpt3dot5SaveMessage(data *entity.Gpt3dot5Response, id string, message string) error {
 	insertData := entity.Gpt3dot5BackUpMessage{UserId: id, Data: *data, Prompt: message}
 	_, err := r.Db.InsertOne(context.Background(), insertData)
 

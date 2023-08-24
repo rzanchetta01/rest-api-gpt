@@ -9,22 +9,23 @@ import (
 	"github.com/graphql-go/graphql"
 )
 
-type gpt3dot5Handler struct {
-	gptService service.IGpt3dot5Service
+type gptHandler struct {
+	gpt3dot5Service        service.IGpt3dot5Service
+	gptDallEHandlerService service.IGptDallEService
 }
 
 type queryRequest struct {
 	Query string `json:"query"`
 }
 
-func NewGpt3dot5Handler(gpt3dot5Service service.IGpt3dot5Service) *gpt3dot5Handler {
-	var handler = gpt3dot5Handler{}
-	handler.gptService = gpt3dot5Service
-
-	return &handler
+func NewGptHandler(gpt3dot5Service service.IGpt3dot5Service, gptDallEService service.IGptDallEService) *gptHandler {
+	return &gptHandler{
+		gpt3dot5Service:        gpt3dot5Service,
+		gptDallEHandlerService: gptDallEService,
+	}
 }
 
-func (handler *gpt3dot5Handler) Gpt3dot5ResolveQuery(c *gin.Context) {
+func (handler *gptHandler) GptResolveQuery(c *gin.Context) {
 	var reqQuery queryRequest
 	err := c.ShouldBindJSON(&reqQuery)
 	if err != nil {
@@ -32,21 +33,21 @@ func (handler *gpt3dot5Handler) Gpt3dot5ResolveQuery(c *gin.Context) {
 		return
 	}
 
-	query := graphql.NewObject(graphql.ObjectConfig{
-		Name: "Gpt3dot5",
+	baseQuery := graphql.NewObject(graphql.ObjectConfig{
+		Name: "BaseQuery",
 		Fields: graphql.Fields{
-			"GPT3dot5": handler.gptService.Gpt3dot5GraphQlField(),
+			"Gpt3dot5": handler.gpt3dot5Service.Gpt3dot5GraphQlField(),
+			"GptDallE": handler.gptDallEHandlerService.GptDallEGraphQlField(),
 		},
 	})
 
-	schemaConfig := graphql.SchemaConfig{Query: query}
-	schema, err := graphql.NewSchema(schemaConfig)
+	schema, err := graphql.NewSchema(graphql.SchemaConfig{Query: baseQuery})
 	if err != nil {
 		response.ResponseError(c, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	resulChan := make(chan graphql.Result)
+	resultChan := make(chan graphql.Result)
 	errChan := make(chan error)
 
 	go func() {
@@ -59,11 +60,11 @@ func (handler *gpt3dot5Handler) Gpt3dot5ResolveQuery(c *gin.Context) {
 			return
 		}
 
-		resulChan <- *result
+		resultChan <- *result
 	}()
 
 	select {
-	case result := <-resulChan:
+	case result := <-resultChan:
 		response.ResponseOKWithData(c, &result)
 		return
 	case err := <-errChan:
