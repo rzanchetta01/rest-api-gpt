@@ -19,3 +19,6 @@
 
 # Go workspace file
 go.work
+list of ai.txt
+configurations/AppConfig.yml
+tests/configurations/AppConfig.yml
