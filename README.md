@@ -1,15 +1,21 @@
 # project-p-back
 
-+ 1 -> baixar golang versão 1.20
-+ 2 -> baixar repo
-+ 3 -> abrir terminal no diretório base
-+ 4 -> rodar comando "go run main.go"
++ 1 -> have golang 1.20
++ 2 -> donwload repo
++ 3 -> open root folder in terminal
++ 4 -> run "go run main.go"
++ 5 -> have python3
++ 6 -> run for linux
++ 6.1 -> chmod +x install_py_dependencies_bash.sh
++ 6.2 -> ./install_py_dependencies_bash.sh
++ 7 -> run for windows
++ 7.1 -> .\install_py_dependencies_powershell.ps1
 
 ## endpoints
-todos ficam dentro do api/route.go
+all endpoints located in api/route.go
 
-# api/user -> post para criar nova conta
-exemplo do body:
+# api/user -> post new account
+body example:
 ```json
 {
 	"username" : "rodrigo_test9",
@@ -17,19 +23,15 @@ exemplo do body:
 }
 ```
 
-exemplo do response correto:
+correct case response:
 ```json
 {
 	"code": 201,
-	"data": {
-		"username": "rodrigo_test9",
-		"password": "$2a$10$lGhmtbwOGOy/YmkY3aZoXe/PzvGwz/wzYKFzHKfnAA11uy5/j09Fy"
-	},
 	"message": "Created"
 }
 ```
-# api/user/login ->post do login para validar acesso e conceder token
-exemplo do body:
+# api/user/login ->login endpoint
+body example:
 ```json
 {
 	"username" : "rodrigo_test1",
@@ -37,7 +39,7 @@ exemplo do body:
 }
 ```
 
-exemplo do response correto:
+correct case response:
 ```json
 {
 	"code": 200,
@@ -50,11 +52,11 @@ exemplo do response correto:
 }
 ```
 
-# api/graphql -> post query para consumir chatGpt 3.5 ( nescessário fornecer bearer token recebido do login)
-exemplo do body:
+# api/graphql/gpt -> post for request  openAi products response, token required
+body example:
 ```graphql
 query {
-	GPT3dot5(message: "Exemplo de mensagem generica", user_id: "64cee0c4d233eb92e607dd88") {
+	Gpt3dot5(message: "Exemplo de mensagem generica", user_id: "64cee0c4d233eb92e607dd88") {
 		id
 		object
 		created
@@ -73,35 +75,50 @@ query {
 			finish_reason
 		}
 	}
+	GptDallE(message: "Exemplo d messagem generica", user_id: "64cee0c4d233eb92e607dd88") {
+		created
+		data {
+			url
+		}
+	}
 }
 ```
 
-exemplo de response:
+correct case response:
 ```json
 {
+	
 	"code": 200,
 	"data": {
 		"data": {
-			"GPT3dot5": {
+			"Gpt3dot5": {
 				"choices": [
 					{
 						"finish_reason": "stop",
 						"index": 0,
 						"message": {
-							"content": "Caro(a) Senhor(a),\n\nEspero que esta mensagem o encontre bem. Eu gostaria de lhe agradecer por seu interesse em nossa empresa/produto/serviço. Estamos encantados em saber que você está interessado em saber mais sobre o que temos a oferecer.\n\nNossa empresa/produto/serviço é reconhecido por [inserir características relevantes, como qualidade, inovação, confiabilidade], o que nos torna uma escolha confiável para atender às suas necessidades. Acreditamos que podemos ultrapassar suas expectativas e fornecer uma solução sob medida para você.\n\nGostaríamos de convidá-lo a [opção 1: visitar nosso site/oficina/showroom], onde você poderá explorar nosso portfólio, obter mais informações e entrar em contato com nossa equipe para esclarecer quaisquer dúvidas que você possa ter. Teremos prazer em ajudá-lo e garantir que você tenha uma excelente experiência com nossa empresa.\n\nSempre nos esforçamos para fornecer um atendimento de primeira linha e soluções personalizadas para cada cliente. Valorizamos sua opinião e gostaríamos de saber mais sobre suas necessidades específicas. Por favor, não hesite em entrar em contato conosco para agendar uma reunião, receber uma cotação ou qualquer outra informação que você precise.\n\nAgradecemos novamente por considerar nossa empresa/produto/serviço e esperamos ter a oportunidade de trabalhar com você em breve.\n\nAtenciosamente,\n\n[Seu nome]\n[Seu cargo]\n[Nome da empresa]",
+							"content": "\"Bom dia/tarde/noite,\n\nGostaria de informar que vou estar ausente do escritório por algum tempo. Durante minha ausência, estarei indisponível para responder e-mails ou atender ligações. Caso precisem de assistência imediata, por favor, entre em contato com [nome da pessoa responsável] pelo telefone [número de telefone] ou pelo e-mail [endereço de e-mail].\n\nAgradeço antecipadamente pela compreensão e estarei de volta em breve.\n\nAtenciosamente,\n[Seu nome]\"",
 							"role": "assistant"
 						}
 					}
 				],
-				"created": 1691420717,
-				"id": "chatcmpl-7kw5FV6hgV9wBptQmenkq9Z4Lu4EU",
+				"created": 1691878672,
+				"id": "chatcmpl-7mrDcw18fUu6vCmfk92qh9PviXuEq",
 				"model": "gpt-3.5-turbo-0613",
 				"object": "chat.completion",
 				"usage": {
-					"completion_tokens": 363,
+					"completion_tokens": 124,
 					"prompt_tokens": 13,
-					"total_tokens": 376
+					"total_tokens": 137
 				}
+			},
+			"GptDallE": {
+				"created": 1691878684,
+				"data": [
+					{
+						"url": "https://oaidalleapiprodscus.blob.core.windows.net/private/org-nEh6gcKPC7BiDfMnqCdSYoK1/user-ku4C7EFD5vlnqo1FZKuJF3B4/img-iMTqqUDn2A32LDAzSjStFfLx.png?st=2023-08-12T21%3A18%3A04Z&se=2023-08-12T23%3A18%3A04Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2023-08-12T17%3A19%3A51Z&ske=2023-08-13T17%3A19%3A51Z&sks=b&skv=2021-08-06&sig=sx3cJWz0DC9fe1TLJnLdMm/A3gtcvZrydgkUzg891cs%3D"
+					}
+				]
 			}
 		}
 	},
@@ -109,3 +126,36 @@ exemplo de response:
 }
 ```
 
+# api/ia/craiyon post for get craiyon website ai images generations, tokens required
+body example:
+```json
+{
+	"user_id" : "64ce8fd1253858dc940ae8e4",
+	"prompt" : "I want a car",
+	"style" : "Photo"
+}
+```
+
+correct case response:
+```json
+{
+	"code": 200,
+	"data": {
+		"images": [
+			"https://img.craiyon.com/2023-08-11/22888778a1c745609e3c62b471bebdb3be9cca12.webp",
+			"https://img.craiyon.com/2023-08-11/f9be6fae936249a496132f68efd1c640be9cca14.webp",
+			"https://img.craiyon.com/2023-08-11/278ad9ca754b476c9efdcdc539c5806dbe9cca11.webp",
+			"https://img.craiyon.com/2023-08-11/38d0e062206f490fae4b18c8d977e0bebe9cca14.webp",
+			"https://img.craiyon.com/2023-08-11/c6dda9e0d5b24c0ea0339d27f6f06940be9cca14.webp",
+			"https://img.craiyon.com/2023-08-11/082d8ed2853141f1bbfe11a5a66978c4be9cca12.webp",
+			"https://img.craiyon.com/2023-08-11/0914e524bd7a4bdc86c7b3e43334a5abbe9cca11.webp",
+			"https://img.craiyon.com/2023-08-11/8d21aa704dc246aeb5638784a815aa02be9cca14.webp",
+			"https://img.craiyon.com/2023-08-11/9503554e5f604be9b071f7417c286ad8be9cca10.webp"
+		],
+		"user_id": "64ce8fd1253858dc940ae8e4",
+		"style": "Photo",
+		"template_message": "Images generated by craiyon.com"
+	},
+	"message": "OK"
+}
+```
