@@ -28,13 +28,13 @@ func (handler *userHandler) CreateUser(c *gin.Context) {
 		return
 	}
 
-	result, err := handler.userService.CreateUser(&user)
+	_, err = handler.userService.CreateUser(&user)
 	if err != nil {
 		response.ResponseError(c, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	response.ResponseCreated(c, result)
+	response.ResponseCreated(c)
 }
 
 func (handler *userHandler) LoginUser(c *gin.Context) {

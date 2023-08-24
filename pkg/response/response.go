@@ -37,10 +37,9 @@ func ResponseOKWithData(c *gin.Context, data interface{}) {
 	c.JSON(http.StatusOK, response)
 }
 
-func ResponseCreated(c *gin.Context, data interface{}) {
-	response := responseOKWithDataModel{
+func ResponseCreated(c *gin.Context) {
+	response := responseOKModel{
 		Code:    201,
-		Data:    data,
 		Message: "Created",
 	}
 

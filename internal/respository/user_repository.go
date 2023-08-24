@@ -6,6 +6,7 @@ import (
 
 	"github.com/spf13/viper"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -52,8 +53,13 @@ func (repo *userRepository) GetAllUser() ([]entity.User, error) {
 
 func (repo *userRepository) GetUserById(id string) (*entity.User, error) {
 	var user entity.User
-	filter := bson.D{{Key: "_id", Value: id}}
-	err := repo.db.FindOne(context.Background(), filter).Decode(&user)
+	_id, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return nil, err
+	}
+
+	filter := bson.D{{Key: "_id", Value: _id}}
+	err = repo.db.FindOne(context.Background(), filter).Decode(&user)
 	if err != nil {
 		return nil, err
 	}
